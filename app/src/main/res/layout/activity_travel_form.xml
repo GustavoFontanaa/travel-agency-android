@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="15dp"
+    android:gravity="top"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Formulário de Viagem"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quantas pessoas?" />
+
+        <EditText
+            android:id="@+id/etQuantasPessoas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite o número de pessoas" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local de Partida"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spLocalPartida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selecione o local de partida" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local de Chegada"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spLocalChegada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selecione o local de chegada" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Como deseja se Locomover"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spLocomocao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Selecione o meio de locomoção" />
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/simpleExpandableListView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#FFF"
+        android:dividerHeight="35dp"
+        android:paddingBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cadastrar"
+        android:layout_marginTop="20dp" />
+
+</LinearLayout>
