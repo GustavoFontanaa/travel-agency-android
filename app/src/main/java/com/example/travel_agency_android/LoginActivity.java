@@ -2,7 +2,9 @@ package com.example.travel_agency_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -16,6 +18,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        SharedPreferences sharedPreferences = getSharedPreferences("register", Context.MODE_PRIVATE);
+//        String sharedEmail = sharedPreferences.getString("email", "");
+//        String sharedPassword = sharedPreferences.getString("password", "");
+
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         databaseHelper = new DatabaseHelper(this);
