@@ -2,21 +2,22 @@ package com.example.travel_agency_android;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import adapter.ChildInfo;
 import adapter.CustomExpandableListAdapter;
 import adapter.GroupInformation;
-import adapter.TravelAdapter;
-import adapter.TravelModel;
 
 public class TravelFormActivity extends AppCompatActivity {
     private LinkedHashMap<String, GroupInformation> mainSet = new LinkedHashMap<>();
@@ -25,11 +26,23 @@ public class TravelFormActivity extends AppCompatActivity {
     private CustomExpandableListAdapter listAdapter;
     private ExpandableListView simpleExpandableListView1;
 
+    final private List<String> locaisPartida = Arrays.asList("Criciuma", "Laguna", "Urussanga");
+
+    final private List<String> locaisChegada = Arrays.asList("Criciuma", "Laguna", "Urussanga");
+
+    final private List<String> tipoLocomocao = Arrays.asList("Aviao", "Onibus", "Carro");
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_travel_form);
+
+        loadSpinnerLocalPartida();
+
+        loadSpinnerLocalChegada();
+
+        loadSpinnerLocomocao();
 
         // add data for displaying in expandable list view
         loadData();
@@ -64,6 +77,69 @@ public class TravelFormActivity extends AppCompatActivity {
                 // display it or do something with it
                 Toast.makeText(getBaseContext(), headerInfo.getName(), Toast.LENGTH_LONG).show();
                 return false;
+            }
+        });
+    }
+
+    private void loadSpinnerLocomocao() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tipoLocomocao);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = findViewById(R.id.spLocomocao);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedItem = (String) parentView.getItemAtPosition(position);
+                // Faça algo com o item selecionado
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Nada foi selecionado
+            }
+        });
+    }
+
+    private void loadSpinnerLocalChegada() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locaisChegada);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = findViewById(R.id.spLocalChegada);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedItem = (String) parentView.getItemAtPosition(position);
+                // Faça algo com o item selecionado
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Nada foi selecionado
+            }
+        });
+    }
+
+    private void loadSpinnerLocalPartida() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locaisPartida);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = findViewById(R.id.spLocalPartida);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedItem = (String) parentView.getItemAtPosition(position);
+                // Faça algo com o item selecionado
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Nada foi selecionado
             }
         });
     }
