@@ -3,28 +3,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="15dp"
     android:gravity="top"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Formulário de Viagem"
-        android:textSize="24sp"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:text="Formulário de Viagem"
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Nome da Viagem" />
+
+        <EditText
+            android:id="@+id/etNomeViagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite o nome da viagem" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Descrição da Viagem" />
+
+        <EditText
+            android:id="@+id/etDescricaoViagem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite a descrição da viagem" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Quantas pessoas?" />
 
         <EditText
@@ -36,8 +60,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Local de Partida"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:text="Local de Partida" />
 
         <Spinner
             android:id="@+id/spLocalPartida"
@@ -48,8 +72,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Local de Chegada"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:text="Local de Chegada" />
 
         <Spinner
             android:id="@+id/spLocalChegada"
@@ -60,8 +84,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Como deseja se Locomover"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:text="Como deseja se Locomover" />
 
         <Spinner
             android:id="@+id/spLocomocao"
@@ -83,7 +107,7 @@
         android:id="@+id/btnAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cadastrar"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:text="Cadastrar" />
 
 </LinearLayout>

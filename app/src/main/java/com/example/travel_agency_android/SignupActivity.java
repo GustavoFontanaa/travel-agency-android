@@ -31,7 +31,7 @@ public class SignupActivity extends AppCompatActivity {
                     if (password.equals(confirmPassword)) {
                         Boolean checkUserEmail = databaseHelper.checkEmail(email);
                         if (checkUserEmail == false) {
-                            Boolean insert = databaseHelper.insertData(email, password);
+                            Boolean insert = databaseHelper.insertUser(email, password);
                             if (insert == true) {
                                 Toast.makeText(SignupActivity.this, "Inscrito com sucesso!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
