@@ -2,9 +2,10 @@ package models;
 
 public class TravelModelDB {
     private int id;
-    private String travelName; // Nome da viagem
-    private String description; // Descrição da viagem
+    private String travelName;
+    private String description;
     private int numberOfPeople;
+    private int travelDuration;
     private String departureLocation;
     private String arrivalLocation;
     private String transportationMode;
@@ -12,10 +13,19 @@ public class TravelModelDB {
     public TravelModelDB() {
     }
 
-    public TravelModelDB(String travelName, String description, int numberOfPeople, String departureLocation, String arrivalLocation, String transportationMode) {
+    public TravelModelDB(
+            String travelName,
+            String description,
+            int numberOfPeople,
+            int travelDuration,
+            String departureLocation,
+            String arrivalLocation,
+            String transportationMode
+    ) {
         this.travelName = travelName;
         this.description = description;
         this.numberOfPeople = numberOfPeople;
+        this.travelDuration = travelDuration;
         this.departureLocation = departureLocation;
         this.arrivalLocation = arrivalLocation;
         this.transportationMode = transportationMode;
@@ -51,6 +61,14 @@ public class TravelModelDB {
 
     public void setNumberOfPeople(int numberOfPeople) {
         this.numberOfPeople = numberOfPeople;
+    }
+
+    public int getTravelDuration() {
+        return travelDuration;
+    }
+
+    public void setTravelDuration(int travelDuration) {
+        this.travelDuration = travelDuration;
     }
 
     public String getDepartureLocation() {

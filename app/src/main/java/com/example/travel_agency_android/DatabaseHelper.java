@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TravelsTable.COL_TRAVEL_NAME + " TEXT, " +
                 TravelsTable.COL_DESCRIPTION + " TEXT, " +
                 TravelsTable.COL_QUANTITY_OF_PEOPLE + " INTEGER, " +
+                TravelsTable.COL_TRAVEL_DURATION + " INTEGER, " +
                 TravelsTable.COL_DEPARTURE_LOCATION + " TEXT, " +
                 TravelsTable.COL_ARRIVAL_LOCATION + " TEXT, " +
                 TravelsTable.COL_TRANSPORTATION_MODE + " TEXT)");
@@ -103,7 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         MyDB.execSQL("DROP TABLE IF EXISTS " + AirfareTable.TABLE_NAME);
         MyDB.execSQL("DROP TABLE IF EXISTS " + MealsTable.TABLE_NAME);
         MyDB.execSQL("DROP TABLE IF EXISTS " + AccommodationTable.TABLE_NAME);
-        ///
+        MyDB.execSQL("DROP TABLE IF EXISTS " + EntertainmentTable.TABLE_NAME);
         onCreate(MyDB);
     }
 
@@ -138,6 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(TravelsTable.COL_TRAVEL_NAME, travel.getTravelName());
         contentValues.put(TravelsTable.COL_DESCRIPTION, travel.getDescription());
         contentValues.put(TravelsTable.COL_QUANTITY_OF_PEOPLE, travel.getNumberOfPeople());
+        contentValues.put(TravelsTable.COL_TRAVEL_DURATION, travel.getTravelDuration());
         contentValues.put(TravelsTable.COL_DEPARTURE_LOCATION, travel.getDepartureLocation());
         contentValues.put(TravelsTable.COL_ARRIVAL_LOCATION, travel.getArrivalLocation());
         contentValues.put(TravelsTable.COL_TRANSPORTATION_MODE, travel.getTransportationMode());

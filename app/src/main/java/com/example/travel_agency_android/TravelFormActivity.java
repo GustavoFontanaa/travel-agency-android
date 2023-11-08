@@ -1,5 +1,6 @@
 package com.example.travel_agency_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -7,24 +8,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
+
+
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.travel_agency_android.databinding.ActivitySignupBinding;
-import com.example.travel_agency_android.databinding.ActivityTravelFormBinding;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import adapter.ChildInfo;
-import adapter.CustomExpandableListAdapter;
-import adapter.GroupInformation;
+import adapter.TravelCalculator;
 import models.AccommodationModelDB;
 import models.AirfareModelDB;
 import models.EntertainmentModelDB;
@@ -35,6 +33,17 @@ import models.TravelModelDB;
 public class TravelFormActivity extends AppCompatActivity {
     ActivitySignupBinding binding;
 
+    private TextView totalGasolinaTextView;
+    private TextView totalPassagemAereaTextView;
+
+    private EditText totalKmEditText;
+    private EditText mediaKmPorLitroEditText;
+    private EditText custoMedioPorLitroEditText;
+    private EditText qtdVeiculosEditText;
+    private EditText custoPessoaEditText;
+    private EditText aluguelVeiculoEditText;
+
+
     final private List<String> locaisPartida = Arrays.asList("Criciuma", "Laguna", "Urussanga");
 
     final private List<String> locaisChegada = Arrays.asList("Criciuma", "Laguna", "Urussanga");
@@ -44,16 +53,32 @@ public class TravelFormActivity extends AppCompatActivity {
     private LinearLayout gasolinaSection;  // substitua pelo ID correto da seção de gasolina
     private LinearLayout aereoSection; // substitua pelo ID correto da seção aérea
 
+    private TravelCalculator travelCalculator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_travel_form);
+
+        totalGasolinaTextView = findViewById(R.id.totalGasolina);
+        totalPassagemAereaTextView = findViewById(R.id.totalPassagemAerea);
+
+        totalKmEditText = findViewById(R.id.totalKm);
+        mediaKmPorLitroEditText = findViewById(R.id.mediaKmL);
+        custoMedioPorLitroEditText = findViewById(R.id.custoMedioLitro);
+        qtdVeiculosEditText = findViewById(R.id.qtdVeiculos);
+        custoPessoaEditText = findViewById(R.id.custo_pessoa);
+        aluguelVeiculoEditText = findViewById(R.id.aluguel_veiculo);
+
+        travelCalculator = new TravelCalculator(
+                totalGasolinaTextView, totalPassagemAereaTextView,
+                totalKmEditText, mediaKmPorLitroEditText,
+                custoMedioPorLitroEditText, qtdVeiculosEditText,
+                custoPessoaEditText, aluguelVeiculoEditText
+        );
 
         gasolinaSection = findViewById(R.id.sectionGasolina);
         aereoSection = findViewById(R.id.sectionAviao);
-
 
         gasolinaSection.setVisibility(View.GONE);
         aereoSection.setVisibility(View.GONE);
@@ -71,6 +96,9 @@ public class TravelFormActivity extends AppCompatActivity {
                 if (areAllFieldsFilled()) {
                     if (insertData()) {
                         Toast.makeText(TravelFormActivity.this, "Viagem registrada com sucesso.", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(TravelFormActivity.this, MainActivity.class);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(TravelFormActivity.this, "Erro ao registrar viagem.", Toast.LENGTH_SHORT).show();
                     }
@@ -108,17 +136,30 @@ public class TravelFormActivity extends AppCompatActivity {
             return false;
         }
 
-        GasolineModelDB gasoline = new GasolineModelDB();
-        AirfareModelDB airfare = new AirfareModelDB();
-        MealModelDB meal = new MealModelDB();
+        Spinner spLocomocao = findViewById(R.id.spLocomocao);
+        String selectedLocomocao = spLocomocao.getSelectedItem().toString();
 
-        if (!insertGasoline(travelId, gasoline) &&
-                !insertAirfare(travelId, airfare) &&
-                !insertMeals(travelId, meal)) {
-            return false;
+        AirfareModelDB airfare = new AirfareModelDB();
+        GasolineModelDB gasoline = new GasolineModelDB();
+        AccommodationModelDB accommodation = new AccommodationModelDB();
+        MealModelDB meal = new MealModelDB();
+        EntertainmentModelDB entertainment = new EntertainmentModelDB();
+
+        if (selectedLocomocao.equals("Aviao")) {
+            if (!insertAirfare(travelId, airfare)) {
+                return false;
+            }
+        } else if (selectedLocomocao.equals("Onibus") || selectedLocomocao.equals("Carro")) {
+            if (!insertGasoline(travelId, gasoline)) {
+                return false;
+            }
         }
 
-        //arrumar essa logica//////////////////////////
+        if (!insertAccommodation(travelId, accommodation)
+                || !insertMeals(travelId, meal)
+                || !insertEntertainment(travelId, entertainment)) {
+            return false;
+        }
 
         return true;
     }
@@ -135,9 +176,11 @@ public class TravelFormActivity extends AppCompatActivity {
         EditText etTravelName = findViewById(R.id.etNomeViagem);
         EditText etDescription = findViewById(R.id.etDescricaoViagem);
         int quantidadePessoas = getIntValueFromEditText(R.id.etQuantasPessoas);
+        int travelDuration = getIntValueFromEditText(R.id.etDuracaoViagem);
 
         TravelModelDB travel = new TravelModelDB();
         travel.setNumberOfPeople(quantidadePessoas);
+        travel.setTravelDuration(travelDuration);
         travel.setDepartureLocation(selectedLocalPartida);
         travel.setArrivalLocation(selectedLocalChegada);
         travel.setTransportationMode(selectedLocomocao);
@@ -150,10 +193,10 @@ public class TravelFormActivity extends AppCompatActivity {
     }
 
     private boolean insertGasoline(long travelId, GasolineModelDB gasoline) {
-        double totalKm = getDoubleValueFromEditText(R.id.total_km);
-        double mediaKmPorLitro = getDoubleValueFromEditText(R.id.media_km_por_l);
-        double custoMedioPorLitro = getDoubleValueFromEditText(R.id.custo_medio_litro);
-        int qtdVeiculos = getIntValueFromEditText(R.id.qtd_veiculos);
+        double totalKm = getDoubleValueFromEditText(R.id.totalKm);
+        double mediaKmPorLitro = getDoubleValueFromEditText(R.id.mediaKmL);
+        double custoMedioPorLitro = getDoubleValueFromEditText(R.id.custoMedioLitro);
+        int qtdVeiculos = getIntValueFromEditText(R.id.qtdVeiculos);
         double totalGasoline = calculateTotalGasoline(totalKm, mediaKmPorLitro, custoMedioPorLitro, qtdVeiculos);
 
         gasoline = new GasolineModelDB(travelId, totalKm, mediaKmPorLitro, custoMedioPorLitro, qtdVeiculos, totalGasoline);
@@ -197,71 +240,46 @@ public class TravelFormActivity extends AppCompatActivity {
     }
 
     private boolean insertEntertainment(long travelId, EntertainmentModelDB entertainment) {
-        CheckBox option1 = findViewById(R.id.option1);
-        CheckBox option2 = findViewById(R.id.option2);
-        CheckBox option3 = findViewById(R.id.option3);
-        CheckBox option4 = findViewById(R.id.option4);
-        CheckBox option5 = findViewById(R.id.option5);
-        CheckBox option6 = findViewById(R.id.option6);
-        CheckBox option7 = findViewById(R.id.option7);
-        CheckBox option8 = findViewById(R.id.option8);
-        CheckBox option9 = findViewById(R.id.option9);
-        CheckBox option10 = findViewById(R.id.option10);
+        CheckBox[] checkBoxes = {
+                findViewById(R.id.option1),
+                findViewById(R.id.option2),
+                findViewById(R.id.option3),
+                findViewById(R.id.option4),
+                findViewById(R.id.option5),
+                findViewById(R.id.option6),
+                findViewById(R.id.option7),
+                findViewById(R.id.option8),
+                findViewById(R.id.option9),
+                findViewById(R.id.option10)
+        };
+
+        double[] costs = {80.00, 120.00, 50.00, 150.00, 40.00, 80.00, 30.00, 70.00, 90.00, 60.00};
 
         double totalCost = 0.0;
 
-        if (option1.isChecked()) {
-            totalCost += 80.00;
+        for (int i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].isChecked()) {
+                totalCost += costs[i];
+            }
         }
 
-        if (option2.isChecked()) {
-            totalCost += 120.00;
-        }
-
-        if (option3.isChecked()) {
-            totalCost += 50.00;
-        }
-
-        if (option4.isChecked()) {
-            totalCost += 150.00;
-        }
-
-        if (option5.isChecked()) {
-            totalCost += 40.00;
-        }
-
-        if (option6.isChecked()) {
-            totalCost += 80.00;
-        }
-
-        if (option7.isChecked()) {
-            totalCost += 30.00;
-        }
-
-        if (option8.isChecked()) {
-            totalCost += 70.00;
-        }
-
-        if (option9.isChecked()) {
-            totalCost += 90.00;
-        }
-
-        if (option10.isChecked()) {
-            totalCost += 60.00;
+        int[] checkBoxValues = new int[checkBoxes.length];
+        for (int i = 0; i < checkBoxes.length; i++) {
+            checkBoxValues[i] = checkBoxes[i].isChecked() ? 1 : 0;
         }
 
         entertainment = new EntertainmentModelDB(
                 travelId,
-                option1.isChecked() ? 1 : 0,
-                option2.isChecked() ? 1 : 0,
-                option3.isChecked() ? 1 : 0,
-                option4.isChecked() ? 1 : 0,
-                option5.isChecked() ? 1 : 0,
-                option6.isChecked() ? 1 : 0,
-                option7.isChecked() ? 1 : 0,
-                option8.isChecked() ? 1 : 0,
-                option9.isChecked() ? 1 : 0,
-                option10.isChecked() ? 1 : 0,
+                checkBoxValues[0],
+                checkBoxValues[1],
+                checkBoxValues[2],
+                checkBoxValues[3],
+                checkBoxValues[4],
+                checkBoxValues[5],
+                checkBoxValues[6],
+                checkBoxValues[7],
+                checkBoxValues[8],
+                checkBoxValues[9],
                 totalCost
         );
 
@@ -287,24 +305,35 @@ public class TravelFormActivity extends AppCompatActivity {
         return 0;
     }
 
-    private double calculateTotalGasoline(double totalKm, double mediaKmPorLitro, double custoMedioPorLitro, int qtdVeiculos) {
-        // Implemente o cálculo do total da gasolina aqui
-        return 0.0;
+    private double calculateTotalGasoline(
+            double totalKm,
+            double mediaKmPorLitro,
+            double custoMedioPorLitro,
+            int qtdVeiculos
+    ) {
+        return ((totalKm / mediaKmPorLitro) * custoMedioPorLitro) / qtdVeiculos;
     }
 
     private double calculateTotalAirfare(double custoPessoa, double aluguelVeiculo) {
-        // Implemente o cálculo do custo total do "airfare" aqui
-        return custoPessoa + aluguelVeiculo;
+        int qtdPessoas = getIntValueFromEditText(R.id.etQuantasPessoas);
+
+        return (custoPessoa * qtdPessoas) + aluguelVeiculo;
     }
 
     private double calculateTotalMeals(double mealCost, int mealsPerDay) {
-        return mealCost * mealsPerDay;
+        int qtdPessoas = getIntValueFromEditText(R.id.etQuantasPessoas);
+        int travelDuration = getIntValueFromEditText(R.id.etDuracaoViagem);
+
+        return ((mealsPerDay * qtdPessoas) * mealCost) * travelDuration;
     }
 
-    private double calculateTotalAccommodation(double costPerNight, int totalNights, int totalRooms) {
-        return costPerNight * totalNights * totalRooms;
+    private double calculateTotalAccommodation(
+            double costPerNight,
+            int totalNights,
+            int totalRooms
+    ) {
+        return (costPerNight * totalNights) * totalRooms;
     }
-
 
     private void loadSpinnerLocomocao() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tipoLocomocao);
@@ -318,7 +347,7 @@ public class TravelFormActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedItem = (String) parentView.getItemAtPosition(position);
                 // Faça algo com o item selecionado
-                if(selectedItem.equals("Aviao")){
+                if (selectedItem.equals("Aviao")) {
 
                     gasolinaSection.setVisibility(View.GONE);
                     aereoSection.setVisibility(View.VISIBLE);
