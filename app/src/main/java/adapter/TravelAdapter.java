@@ -1,13 +1,16 @@
 package adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.travel_agency_android.MainActivity;
 import com.example.travel_agency_android.R;
+import com.example.travel_agency_android.ReportFormActivity;
 
 import java.util.ArrayList;
 
@@ -68,7 +71,10 @@ public class TravelAdapter extends BaseAdapter {
 
         btnViewReport.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { }
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, ReportFormActivity.class);
+                activity.startActivity(intent);
+            }
         });
 
         return view;

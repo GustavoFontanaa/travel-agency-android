@@ -38,6 +38,10 @@
             android:name=".TravelFormActivity"
             android:exported="false"></activity>
 
+        <activity
+            android:name=".ReportFormActivity"
+            android:exported="false"></activity>
+
     </application>
 
 </manifest>
