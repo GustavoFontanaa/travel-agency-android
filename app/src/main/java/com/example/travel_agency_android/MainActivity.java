@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnLogout;
     private  ArrayList<TravelModel> travels = new ArrayList<TravelModel>();
 
+    DatabaseHelper databaseHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +36,12 @@ public class MainActivity extends AppCompatActivity {
         travelList = findViewById(R.id.travelList);
         adapter = new TravelAdapter(MainActivity.this);
 
+        databaseHelper = new DatabaseHelper(this);
+        travels.addAll(databaseHelper.findAllTravels());
 
-        for (int i = 0; i < 6; i++){
-            TravelModel travel = new TravelModel();
+        adapter.setTravelList(travels);
 
-            travel.setName((i+1) + ". Nome da Viagem");
-            travel.setDescription("Descrição simples da viagem");
-
-            travels.add(travel);
-
-            adapter.setTravelList(travels);
-            travelList.setAdapter(adapter);
-        }
+        travelList.setAdapter(adapter);
 
         btnAdd = findViewById(R.id.btnAdd);
 

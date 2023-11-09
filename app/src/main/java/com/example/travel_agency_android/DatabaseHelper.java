@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import TablesHelper.AccommodationTable;
 import TablesHelper.AirfareTable;
 import TablesHelper.EntertainmentTable;
@@ -15,6 +18,7 @@ import TablesHelper.GasolineTable;
 import TablesHelper.MealsTable;
 import TablesHelper.TravelsTable;
 import TablesHelper.UsersTable;
+import adapter.TravelModel;
 import models.AccommodationModelDB;
 import models.AirfareModelDB;
 import models.EntertainmentModelDB;
@@ -123,6 +127,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + UsersTable.COL_EMAIL + " = ?", new String[]{email});
         return cursor.getCount() > 0;
     }
+
+    public List<TravelModel> findAllTravels() {
+        List<TravelModel> travelList = new ArrayList<>();
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TravelsTable.TABLE_NAME;
+        Cursor cursor = MyDatabase.rawQuery(query, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int nomeColumnIndex = cursor.getColumnIndex(TravelsTable.COL_TRAVEL_NAME);
+                int descricaoColumnIndex = cursor.getColumnIndex(TravelsTable.COL_DESCRIPTION);
+                int idColumnIndex = cursor.getColumnIndex(TravelsTable.COL_ID);
+
+                do {
+                    String nome = cursor.getString(nomeColumnIndex);
+                    String descricao = cursor.getString(descricaoColumnIndex);
+                    Long id = cursor.getLong(idColumnIndex);
+
+                    TravelModel travel = new TravelModel(id, nome, descricao);
+                    travelList.add(travel);
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+        }
+
+        return travelList;
+
+
+    }
+
 
     public boolean checkEmailPassword(String email, String password) {
         SQLiteDatabase MyDatabase = this.getReadableDatabase();
