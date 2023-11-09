@@ -128,6 +128,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor.getCount() > 0;
     }
 
+    public void deleteTravelById(int travelId) {
+        SQLiteDatabase MyDatabase = this.getWritableDatabase();
+        String whereClause = TravelsTable.COL_ID + " = ?";
+        String[] whereArgs = {String.valueOf(travelId)};
+
+        MyDatabase.delete(TravelsTable.TABLE_NAME, whereClause, whereArgs);
+    }
+
+
     public List<TravelModel> findAllTravels() {
         List<TravelModel> travelList = new ArrayList<>();
         SQLiteDatabase MyDatabase = this.getReadableDatabase();

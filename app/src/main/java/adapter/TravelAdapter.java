@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.travel_agency_android.DatabaseHelper;
 import com.example.travel_agency_android.MainActivity;
 import com.example.travel_agency_android.R;
 import com.example.travel_agency_android.ReportFormActivity;
@@ -18,7 +19,10 @@ public class TravelAdapter extends BaseAdapter {
     private ArrayList<TravelModel> travelList;
     private Activity activity;
 
+    private DatabaseHelper databaseHelper;
+
     public TravelAdapter(final Activity activity) {
+        databaseHelper = new DatabaseHelper(activity);
         this.activity = activity;
     }
 
@@ -59,7 +63,7 @@ public class TravelAdapter extends BaseAdapter {
         description.setText(travel.getDescription());
 
         Button btnEdit = view.findViewById(R.id.btnEdit);
-        Button btnDelete = view.findViewById(R.id.btnEdit);
+        Button btnDelete = view.findViewById(R.id.btnDelete);
         Button btnViewReport = view.findViewById(R.id.btnViewReport);
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +73,11 @@ public class TravelAdapter extends BaseAdapter {
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { }
+            public void onClick(View v) {
+                databaseHelper.deleteTravelById(travel.getId().intValue());
+                Intent intent = new Intent(activity, MainActivity.class);
+                activity.startActivity(intent);
+            }
         });
 
         btnViewReport.setOnClickListener(new View.OnClickListener() {
