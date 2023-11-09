@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         travels.addAll(databaseHelper.findAllTravels());
 
         adapter.setTravelList(travels);
-
         travelList.setAdapter(adapter);
 
         btnAdd = findViewById(R.id.btnAdd);

@@ -52,6 +52,9 @@ public class TravelAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.travelName);
         name.setText(travel.getName());
 
+        TextView id = view.findViewById(R.id.travelId);
+        id.setText("#" + travel.getId().toString() +" ");
+
         TextView description = view.findViewById(R.id.travelDescription);
         description.setText(travel.getDescription());
 
