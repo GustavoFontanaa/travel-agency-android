@@ -7,8 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-
 
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -17,8 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.travel_agency_android.databinding.ActivitySignupBinding;
-
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,10 +30,10 @@ import models.MealModelDB;
 import models.TravelModelDB;
 
 public class TravelFormActivity extends AppCompatActivity {
-    ActivitySignupBinding binding;
-
     private TextView totalGasolinaTextView;
     private TextView totalPassagemAereaTextView;
+    private TextView totalHospedagemTextView;
+    private TextView totalRefeicoesTextView;
 
     private EditText totalKmEditText;
     private EditText mediaKmPorLitroEditText;
@@ -42,7 +41,13 @@ public class TravelFormActivity extends AppCompatActivity {
     private EditText qtdVeiculosEditText;
     private EditText custoPessoaEditText;
     private EditText aluguelVeiculoEditText;
-
+    private EditText custoPorNoiteEditText;
+    private EditText qtdNoitesEditText;
+    private EditText qtdQuartosEditText;
+    private EditText custoRefeicaoEditText;
+    private EditText refeicoesPorDiaEditText;
+    private EditText qtdPessoasEditText;
+    private EditText duracaoViagemEditText;
 
     final private List<String> locaisPartida = Arrays.asList("Criciuma", "Laguna", "Urussanga");
 
@@ -62,19 +67,36 @@ public class TravelFormActivity extends AppCompatActivity {
 
         totalGasolinaTextView = findViewById(R.id.totalGasolina);
         totalPassagemAereaTextView = findViewById(R.id.totalPassagemAerea);
+        totalHospedagemTextView = findViewById(R.id.totalHospedagem);
+        totalRefeicoesTextView = findViewById(R.id.totalRefeicoes);
 
         totalKmEditText = findViewById(R.id.totalKm);
         mediaKmPorLitroEditText = findViewById(R.id.mediaKmL);
         custoMedioPorLitroEditText = findViewById(R.id.custoMedioLitro);
         qtdVeiculosEditText = findViewById(R.id.qtdVeiculos);
+
         custoPessoaEditText = findViewById(R.id.custo_pessoa);
         aluguelVeiculoEditText = findViewById(R.id.aluguel_veiculo);
 
+        custoPorNoiteEditText = findViewById(R.id.custo_noite);
+        qtdNoitesEditText = findViewById(R.id.noites);
+        qtdQuartosEditText = findViewById(R.id.quartos);
+
+        custoRefeicaoEditText = findViewById(R.id.custo_refeicao);
+        refeicoesPorDiaEditText = findViewById(R.id.refeicoes_dia);
+        qtdPessoasEditText = findViewById(R.id.etQuantasPessoas);
+        duracaoViagemEditText = findViewById(R.id.etDuracaoViagem);
+
         travelCalculator = new TravelCalculator(
                 totalGasolinaTextView, totalPassagemAereaTextView,
+                totalHospedagemTextView, totalRefeicoesTextView,
                 totalKmEditText, mediaKmPorLitroEditText,
                 custoMedioPorLitroEditText, qtdVeiculosEditText,
-                custoPessoaEditText, aluguelVeiculoEditText
+                custoPessoaEditText, aluguelVeiculoEditText,
+                custoPorNoiteEditText, qtdNoitesEditText,
+                qtdQuartosEditText, custoRefeicaoEditText,
+                refeicoesPorDiaEditText, qtdPessoasEditText,
+                duracaoViagemEditText
         );
 
         gasolinaSection = findViewById(R.id.sectionGasolina);
@@ -88,6 +110,17 @@ public class TravelFormActivity extends AppCompatActivity {
         loadSpinnerLocalChegada();
 
         loadSpinnerLocomocao();
+
+        setupCheckBoxListener(findViewById(R.id.option1));
+        setupCheckBoxListener(findViewById(R.id.option2));
+        setupCheckBoxListener(findViewById(R.id.option3));
+        setupCheckBoxListener(findViewById(R.id.option4));
+        setupCheckBoxListener(findViewById(R.id.option5));
+        setupCheckBoxListener(findViewById(R.id.option6));
+        setupCheckBoxListener(findViewById(R.id.option7));
+        setupCheckBoxListener(findViewById(R.id.option8));
+        setupCheckBoxListener(findViewById(R.id.option9));
+        setupCheckBoxListener(findViewById(R.id.option10));
 
         Button btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +140,41 @@ public class TravelFormActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setupCheckBoxListener(final CheckBox checkBox) {
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateTotalEntertainment();
+            }
+        });
+    }
+
+    private void updateTotalEntertainment() {
+        CheckBox[] checkBoxes = {
+                findViewById(R.id.option1),
+                findViewById(R.id.option2),
+                findViewById(R.id.option3),
+                findViewById(R.id.option4),
+                findViewById(R.id.option5),
+                findViewById(R.id.option6),
+                findViewById(R.id.option7),
+                findViewById(R.id.option8),
+                findViewById(R.id.option9),
+                findViewById(R.id.option10)
+        };
+
+        double[] costs = {80.00, 120.00, 50.00, 150.00, 40.00, 80.00, 30.00, 70.00, 90.00, 60.00};
+
+        double totalEntertainment = calculateTotalEntertainmentCost(checkBoxes, costs);
+        setTotalTextView(findViewById(R.id.totalEntertainment), totalEntertainment);
+    }
+
+    private void setTotalTextView(TextView totalTextView, double totalValue) {
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        String totalValueFormatted = decimalFormat.format(totalValue);
+        totalTextView.setText("Total: " + totalValueFormatted);
     }
 
     private boolean areAllFieldsFilled() {
@@ -255,18 +323,8 @@ public class TravelFormActivity extends AppCompatActivity {
 
         double[] costs = {80.00, 120.00, 50.00, 150.00, 40.00, 80.00, 30.00, 70.00, 90.00, 60.00};
 
-        double totalCost = 0.0;
-
-        for (int i = 0; i < checkBoxes.length; i++) {
-            if (checkBoxes[i].isChecked()) {
-                totalCost += costs[i];
-            }
-        }
-
-        int[] checkBoxValues = new int[checkBoxes.length];
-        for (int i = 0; i < checkBoxes.length; i++) {
-            checkBoxValues[i] = checkBoxes[i].isChecked() ? 1 : 0;
-        }
+        double totalCost = calculateTotalEntertainmentCost(checkBoxes, costs);
+        int[] checkBoxValues = getCheckBoxValues(checkBoxes);
 
         entertainment = new EntertainmentModelDB(
                 travelId,
@@ -333,6 +391,28 @@ public class TravelFormActivity extends AppCompatActivity {
             int totalRooms
     ) {
         return (costPerNight * totalNights) * totalRooms;
+    }
+
+    private double calculateTotalEntertainmentCost(CheckBox[] checkBoxes, double[] costs) {
+        double totalCost = 0.0;
+
+        for (int i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].isChecked()) {
+                totalCost += costs[i];
+            }
+        }
+
+        return totalCost;
+    }
+
+    private int[] getCheckBoxValues(CheckBox[] checkBoxes) {
+        int[] checkBoxValues = new int[checkBoxes.length];
+
+        for (int i = 0; i < checkBoxes.length; i++) {
+            checkBoxValues[i] = checkBoxes[i].isChecked() ? 1 : 0;
+        }
+
+        return checkBoxValues;
     }
 
     private void loadSpinnerLocomocao() {

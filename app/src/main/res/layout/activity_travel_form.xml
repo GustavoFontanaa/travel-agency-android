@@ -180,7 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Total XXXXX"
+                android:text="Total:"
                 android:textSize="20sp" />
 
         </LinearLayout>
@@ -223,7 +223,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Total XXXXX"
+                android:text="Total:"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -274,10 +274,11 @@
             android:inputType="number" />
 
         <TextView
+            android:id="@+id/totalHospedagem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Total XXXXX"
+            android:text="Total:"
             android:textSize="20sp" />
 
         <TextView
@@ -314,10 +315,11 @@
             android:inputType="number" />
 
         <TextView
+            android:id="@+id/totalRefeicoes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Total XXXXX"
+            android:text="Total:"
             android:textSize="20sp" />
 
         <TextView
@@ -399,35 +401,25 @@
                     android:layout_height="wrap_content"
                     android:text="Clube Recreativo - Custo: R$ 60,00" />
 
+                <TextView
+                    android:id="@+id/totalEntertainment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Total:"
+                    android:textSize="16sp" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/total_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/optionsLayout"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Total: XXX"
-                android:textSize="16sp" />
-
         </RelativeLayout>
-
-
-        <!--    <ExpandableListView-->
-        <!--        android:id="@+id/simpleExpandableListView1"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="0dp"-->
-        <!--        android:layout_weight="1"-->
-        <!--        android:divider="#FFF"-->
-        <!--        android:dividerHeight="35dp"-->
-        <!--        android:paddingBottom="8dp" />-->
 
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:text="Cadastrar" />
 
     </LinearLayout>

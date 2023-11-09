@@ -14,61 +14,61 @@
         android:layout_marginTop="20dp">
 
         <CheckBox
-            android:id="@+id/option1"
+            android:id="@+id/option1_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Praia da Esperança - Custo: R$ 80,00" />
 
         <CheckBox
-            android:id="@+id/option2"
+            android:id="@+id/option2_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Parque das Maravilhas - Custo: R$ 120,00" />
 
         <CheckBox
-            android:id="@+id/option3"
+            android:id="@+id/option3_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cinema dos Sonhos - Custo: R$ 50,00" />
 
         <CheckBox
-            android:id="@+id/option4"
+            android:id="@+id/option4_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Restaurante Saboroso - Custo: R$ 150,00" />
 
         <CheckBox
-            android:id="@+id/option5"
+            android:id="@+id/option5_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Museu Histórico - Custo: R$ 40,00" />
 
         <CheckBox
-            android:id="@+id/option6"
+            android:id="@+id/option6_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Teatro Encantado - Custo: R$ 80,00" />
 
         <CheckBox
-            android:id="@+id/option7"
+            android:id="@+id/option7_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Café Aconchegante - Custo: R$ 30,00" />
 
         <CheckBox
-            android:id="@+id/option8"
+            android:id="@+id/option8_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pista de Patinação - Custo: R$ 70,00" />
 
         <CheckBox
-            android:id="@+id/option9"
+            android:id="@+id/option9_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Montanha Aventureira - Custo: R$ 90,00" />
 
         <CheckBox
-            android:id="@+id/option10"
+            android:id="@+id/option10_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Clube Recreativo - Custo: R$ 60,00" />
@@ -76,7 +76,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/total_label"
+        android:id="@+id/total_label_"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/optionsLayout"
