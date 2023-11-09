@@ -104,6 +104,7 @@ public class TravelAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ReportFormActivity.class);
+                intent.putExtra("travelId", travel.getId());
                 activity.startActivity(intent);
             }
         });

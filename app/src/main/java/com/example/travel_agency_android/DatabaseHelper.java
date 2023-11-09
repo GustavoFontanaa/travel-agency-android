@@ -163,10 +163,229 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return travelList;
-
-
     }
 
+    public TravelModelDB getTravelById(long travelId) {
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TravelsTable.TABLE_NAME +
+                " WHERE " + TravelsTable.COL_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(travelId)};
+
+        Cursor cursor = MyDatabase.rawQuery(query, selectionArgs);
+
+        TravelModelDB travel = null;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int travelNameIndex = cursor.getColumnIndex(TravelsTable.COL_TRAVEL_NAME);
+                int descriptionIndex = cursor.getColumnIndex(TravelsTable.COL_DESCRIPTION);
+                int numberOfPeopleIndex = cursor.getColumnIndex(TravelsTable.COL_QUANTITY_OF_PEOPLE);
+                int travelDurationIndex = cursor.getColumnIndex(TravelsTable.COL_TRAVEL_DURATION);
+                int departureLocationIndex = cursor.getColumnIndex(TravelsTable.COL_DEPARTURE_LOCATION);
+                int arrivalLocationIndex = cursor.getColumnIndex(TravelsTable.COL_ARRIVAL_LOCATION);
+                int transportationModeIndex = cursor.getColumnIndex(TravelsTable.COL_TRANSPORTATION_MODE);
+
+                String travelName = cursor.getString(travelNameIndex);
+                String description = cursor.getString(descriptionIndex);
+                int numberOfPeople = cursor.getInt(numberOfPeopleIndex);
+                int travelDuration = cursor.getInt(travelDurationIndex);
+                String departureLocation = cursor.getString(departureLocationIndex);
+                String arrivalLocation = cursor.getString(arrivalLocationIndex);
+                String transportationMode = cursor.getString(transportationModeIndex);
+
+                travel = new TravelModelDB(travelName, description, numberOfPeople,
+                        travelDuration, departureLocation, arrivalLocation, transportationMode);
+            }
+
+            cursor.close();
+        }
+
+        return travel;
+    }
+
+    public GasolineModelDB getGasolineById(long gasolineId) {
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + GasolineTable.TABLE_NAME +
+                " WHERE " + GasolineTable.COL_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(gasolineId)};
+
+        Cursor cursor = MyDatabase.rawQuery(query, selectionArgs);
+
+        GasolineModelDB gasoline = null;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int travelIdIndex = cursor.getColumnIndex(GasolineTable.COL_TRAVEL_ID);
+                int totalKmIndex = cursor.getColumnIndex(GasolineTable.COL_TOTAL_KM);
+                int mediaKmLitresIndex = cursor.getColumnIndex(GasolineTable.COL_MEDIA_KM_LITRES);
+                int averageCostPerLiterIndex = cursor.getColumnIndex(GasolineTable.COL_AVERAGE_COST_PER_LITER);
+                int numberOfVehiclesIndex = cursor.getColumnIndex(GasolineTable.COL_NUMBER_OF_VEHICLES);
+                int totalIndex = cursor.getColumnIndex(GasolineTable.COL_TOTAL);
+
+                long travelId = cursor.getLong(travelIdIndex);
+                double totalKm = cursor.getDouble(totalKmIndex);
+                double mediaKmLitres = cursor.getDouble(mediaKmLitresIndex);
+                double averageCostPerLiter = cursor.getDouble(averageCostPerLiterIndex);
+                int numberOfVehicles = cursor.getInt(numberOfVehiclesIndex);
+                double total = cursor.getDouble(totalIndex);
+
+                gasoline = new GasolineModelDB(travelId, totalKm, mediaKmLitres, averageCostPerLiter, numberOfVehicles, total);
+            }
+
+            cursor.close();
+        }
+
+        return gasoline;
+    }
+
+    public AirfareModelDB getAirfareById(long airfareId) {
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + AirfareTable.TABLE_NAME +
+                " WHERE " + AirfareTable.COL_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(airfareId)};
+
+        Cursor cursor = MyDatabase.rawQuery(query, selectionArgs);
+
+        AirfareModelDB airfare = null;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int travelIdIndex = cursor.getColumnIndex(AirfareTable.COL_TRAVEL_ID);
+                int estimatedCostPerPersonIndex = cursor.getColumnIndex(AirfareTable.COL_ESTIMATED_COST_PER_PERSON);
+                int vehicleRentalIndex = cursor.getColumnIndex(AirfareTable.COL_VEHICLE_RENTAL);
+                int totalIndex = cursor.getColumnIndex(AirfareTable.COL_TOTAL);
+
+                long travelId = cursor.getLong(travelIdIndex);
+                double estimatedCostPerPerson = cursor.getDouble(estimatedCostPerPersonIndex);
+                double vehicleRental = cursor.getDouble(vehicleRentalIndex);
+                double total = cursor.getDouble(totalIndex);
+
+                airfare = new AirfareModelDB(travelId, estimatedCostPerPerson, vehicleRental, total);
+            }
+
+            cursor.close();
+        }
+
+        return airfare;
+    }
+
+    public AccommodationModelDB getAccommodationById(long accommodationId) {
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + AccommodationTable.TABLE_NAME +
+                " WHERE " + AccommodationTable.COL_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(accommodationId)};
+
+        Cursor cursor = MyDatabase.rawQuery(query, selectionArgs);
+
+        AccommodationModelDB accommodation = null;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int travelIdIndex = cursor.getColumnIndex(AccommodationTable.COL_TRAVEL_ID);
+                int costPerNightIndex = cursor.getColumnIndex(AccommodationTable.COL_COST_PER_NIGHT);
+                int totalOfNightsIndex = cursor.getColumnIndex(AccommodationTable.COL_TOTAL_OF_NIGHTS);
+                int totalOfRoomsIndex = cursor.getColumnIndex(AccommodationTable.COL_TOTAL_OF_ROOMS);
+                int totalIndex = cursor.getColumnIndex(AccommodationTable.COL_TOTAL);
+
+                long travelId = cursor.getLong(travelIdIndex);
+                double costPerNight = cursor.getDouble(costPerNightIndex);
+                int totalOfNights = cursor.getInt(totalOfNightsIndex);
+                int totalOfRooms = cursor.getInt(totalOfRoomsIndex);
+                double total = cursor.getDouble(totalIndex);
+
+                accommodation = new AccommodationModelDB(travelId, costPerNight, totalOfNights, totalOfRooms, total);
+            }
+
+            cursor.close();
+        }
+
+        return accommodation;
+    }
+
+    public MealModelDB getMealById(long mealId) {
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + MealsTable.TABLE_NAME +
+                " WHERE " + MealsTable.COL_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(mealId)};
+
+        Cursor cursor = MyDatabase.rawQuery(query, selectionArgs);
+
+        MealModelDB meal = null;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int travelIdIndex = cursor.getColumnIndex(MealsTable.COL_TRAVEL_ID);
+                int mealCostIndex = cursor.getColumnIndex(MealsTable.COL_MEAL_COST);
+                int mealsPerDayIndex = cursor.getColumnIndex(MealsTable.COL_MEALS_PER_DAY);
+                int totalIndex = cursor.getColumnIndex(MealsTable.COL_TOTAL);
+
+                long travelId = cursor.getLong(travelIdIndex);
+                double mealCost = cursor.getDouble(mealCostIndex);
+                int mealsPerDay = cursor.getInt(mealsPerDayIndex);
+                double total = cursor.getDouble(totalIndex);
+
+                meal = new MealModelDB(travelId, mealCost, mealsPerDay, total);
+            }
+
+            cursor.close();
+        }
+
+        return meal;
+    }
+
+    public EntertainmentModelDB getEntertainmentById(long entertainmentId) {
+        SQLiteDatabase MyDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + EntertainmentTable.TABLE_NAME +
+                " WHERE " + EntertainmentTable.COL_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(entertainmentId)};
+
+        Cursor cursor = MyDatabase.rawQuery(query, selectionArgs);
+
+        EntertainmentModelDB entertainment = null;
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int travelIdIndex = cursor.getColumnIndex(EntertainmentTable.COL_TRAVEL_ID);
+                int option1Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_1);
+                int option2Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_2);
+                int option3Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_3);
+                int option4Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_4);
+                int option5Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_5);
+                int option6Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_6);
+                int option7Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_7);
+                int option8Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_8);
+                int option9Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_9);
+                int option10Index = cursor.getColumnIndex(EntertainmentTable.COL_OPTION_10);
+                int totalIndex = cursor.getColumnIndex(EntertainmentTable.COL_TOTAL);
+
+                long travelId = cursor.getLong(travelIdIndex);
+                int option1 = cursor.getInt(option1Index);
+                int option2 = cursor.getInt(option2Index);
+                int option3 = cursor.getInt(option3Index);
+                int option4 = cursor.getInt(option4Index);
+                int option5 = cursor.getInt(option5Index);
+                int option6 = cursor.getInt(option6Index);
+                int option7 = cursor.getInt(option7Index);
+                int option8 = cursor.getInt(option8Index);
+                int option9 = cursor.getInt(option9Index);
+                int option10 = cursor.getInt(option10Index);
+                double total = cursor.getDouble(totalIndex);
+
+                entertainment = new EntertainmentModelDB(
+                        travelId, option1,
+                        option2, option3,
+                        option4, option5,
+                        option6, option7,
+                        option8, option9,
+                        option10, total
+                );
+            }
+
+            cursor.close();
+        }
+
+        return entertainment;
+    }
 
     public boolean checkEmailPassword(String email, String password) {
         SQLiteDatabase MyDatabase = this.getReadableDatabase();
