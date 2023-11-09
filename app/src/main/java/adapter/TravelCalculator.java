@@ -155,9 +155,14 @@ public class TravelCalculator {
             double totalGasolina = calculateTotalGasoline(totalKm, mediaKmPorLitro, custoMedioPorLitro, qtdVeiculos);
             setTotalTextView(totalTextView, totalGasolina);
         } else if (totalTextView == totalPassagemAereaTextView) {
+            int qtdPessoas = 1;
+
             double custoPessoa = Double.parseDouble(custoPessoaText);
             double aluguelVeiculo = Double.parseDouble(aluguelVeiculoText);
-            int qtdPessoas = Integer.parseInt(qtdPessoasText);
+
+            if (!qtdPessoasText.isEmpty()) {
+                qtdPessoas = Integer.parseInt(qtdPessoasText);
+            }
 
             double totalPassagemAerea = calculateTotalAirfare(custoPessoa, aluguelVeiculo, qtdPessoas);
             setTotalTextView(totalTextView, totalPassagemAerea);

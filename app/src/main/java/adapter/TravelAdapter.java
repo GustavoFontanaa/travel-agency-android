@@ -1,6 +1,8 @@
 package adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,7 @@ public class TravelAdapter extends BaseAdapter {
         this.activity = activity;
     }
 
-    public void setTravelList(ArrayList<TravelModel> travels){
+    public void setTravelList(ArrayList<TravelModel> travels) {
         travelList = travels;
     }
 
@@ -47,7 +49,7 @@ public class TravelAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        if(view == null){
+        if (view == null) {
             view = activity.getLayoutInflater().inflate(R.layout.item_lista, viewGroup, false);
         }
 
@@ -57,7 +59,7 @@ public class TravelAdapter extends BaseAdapter {
         name.setText(travel.getName());
 
         TextView id = view.findViewById(R.id.travelId);
-        id.setText("#" + travel.getId().toString() +" ");
+        id.setText("#" + travel.getId().toString() + " ");
 
         TextView description = view.findViewById(R.id.travelDescription);
         description.setText(travel.getDescription());
@@ -68,15 +70,33 @@ public class TravelAdapter extends BaseAdapter {
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { }
+            public void onClick(View v) {
+            }
         });
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseHelper.deleteTravelById(travel.getId().intValue());
-                Intent intent = new Intent(activity, MainActivity.class);
-                activity.startActivity(intent);
+                new AlertDialog.Builder(activity)
+                        .setTitle("Excluir Viagem")
+                        .setMessage("Tem certeza de que deseja excluir este item?")
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                databaseHelper.deleteTravelById(travel.getId().intValue());
+                                travelList.remove(travel);
+                                notifyDataSetChanged();
+
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                activity.startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
             }
         });
 
