@@ -17,7 +17,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.travel_agency_android.api.API;
+
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,9 +28,16 @@ import adapter.TravelCalculator;
 import models.AccommodationModelDB;
 import models.AirfareModelDB;
 import models.EntertainmentModelDB;
+import models.Entretenimento;
+import models.Gasolina;
 import models.GasolineModelDB;
 import models.MealModelDB;
+import models.Resposta;
 import models.TravelModelDB;
+import models.Viagem;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TravelFormActivity extends AppCompatActivity {
     private TextView totalGasolinaTextView;
@@ -257,6 +267,63 @@ public class TravelFormActivity extends AppCompatActivity {
         travel.setDescription(etDescription.getText().toString());
 
         DatabaseHelper dbHelper = new DatabaseHelper(TravelFormActivity.this);
+
+        // SELECT NO BANCO DE DADOS BUSCANDO AS INFORMACOES DA VIAGEM.
+
+        Viagem v = new Viagem();
+        v.setIdConta(123482);
+        v.setCustoPorPessoa(500.00);
+        v.setCustoTotalViagem(1000.00);
+        v.setDuracaoViagem(travelDuration);
+        v.setLocal(selectedLocalChegada);
+        v.setTotalViajantes(quantidadePessoas);
+
+        // SELECT BUSCANDO OS GASTOS COM A GASOLINA.
+
+        Gasolina g = new Gasolina();
+        g.setTotalEstimadoKM(700);
+        g.setCustoMedioLitro(5.89);
+        g.setMediaKMLitro(15.9);
+        g.setTotalVeiculos(1);
+
+        v.setGasolina(g);
+
+        // SELECT BUSCANDO OS ENTRETENIMENTOS.
+
+        Entretenimento e = new Entretenimento();
+        e.setEntretenimento("Parque");
+        e.setValor(100.00);
+
+        Entretenimento e1 = new Entretenimento();
+        e1.setEntretenimento("Festa");
+        e1.setValor(350.00);
+
+        ArrayList<Entretenimento> listaEntretenimento = new ArrayList<Entretenimento>();
+        listaEntretenimento.add(e);
+        listaEntretenimento.add(e1);
+
+        v.setListaEntretenimento(listaEntretenimento);
+
+        //
+        // Sincronizo com o servidor do professo.
+        //
+        API.postViagem(v, new Callback<Resposta>() {
+            @Override
+            public void onResponse(Call<Resposta> call, Response<Resposta> response) {
+                if (response != null && response.isSuccessful()) {
+
+                    Resposta r = response.body();
+                    r.getDado();
+                    r.getMensagem();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Resposta> call, Throwable t) {
+                // Tratar o erro.
+            }
+        });
+
         return dbHelper.insertTravel(travel);
     }
 
