@@ -17,10 +17,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.travel_agency_android.api.API;
+import com.example.travel_agency_android.api.Api;
+import com.example.travel_agency_android.api.model.PostDTO;
+import com.example.travel_agency_android.api.model.Resposta;
+import com.example.travel_agency_android.api.model.ViagemCustoAereo;
+import com.example.travel_agency_android.api.model.ViagemCustoGasolina;
+import com.example.travel_agency_android.api.model.ViagemCustoHospedagem;
+import com.example.travel_agency_android.api.model.ViagemCustoRefeicao;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,13 +33,9 @@ import adapter.TravelCalculator;
 import models.AccommodationModelDB;
 import models.AirfareModelDB;
 import models.EntertainmentModelDB;
-import models.Entretenimento;
-import models.Gasolina;
 import models.GasolineModelDB;
 import models.MealModelDB;
-import models.Resposta;
 import models.TravelModelDB;
-import models.Viagem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,10 +66,12 @@ public class TravelFormActivity extends AppCompatActivity {
 
     final private List<String> tipoLocomocao = Arrays.asList("Aviao", "Onibus", "Carro");
 
-    private LinearLayout gasolinaSection;  // substitua pelo ID correto da seção de gasolina
-    private LinearLayout aereoSection; // substitua pelo ID correto da seção aérea
+    private LinearLayout gasolinaSection;
+    private LinearLayout aereoSection;
 
     private TravelCalculator travelCalculator;
+
+    private double totalViagem = 0.0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,46 +141,46 @@ public class TravelFormActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (areAllFieldsFilled()) {
                     if (insertData()) {
-                        // SELECT NO BANCO DE DADOS BUSCANDO AS INFORMACOES DA VIAGEM.
+                        totalViagem += calculateTotalViagem();
+                        int qtdPessoas = Integer.parseInt(qtdPessoasEditText.getText().toString());
+                        int duracaoViagem = Integer.parseInt(duracaoViagemEditText.getText().toString());
 
-                        Viagem v = new Viagem();
-                        v.setIdConta(123482);
-                        v.setCustoPorPessoa(500.00);
-                        v.setCustoTotalViagem(1000.00);
-                        v.setDuracaoViagem(7);
-                        v.setLocal("RJ");
-                        v.setTotalViajantes(2);
+                        ViagemCustoAereo custoAereo = new ViagemCustoAereo(
+                                getDoubleValueFromEditText(R.id.custo_pessoa),
+                                getDoubleValueFromEditText(R.id.aluguel_veiculo)
+                        );
 
-                        // SELECT BUSCANDO OS GASTOS COM A GASOLINA.
+                        ViagemCustoGasolina custoGasolina = new ViagemCustoGasolina(
+                                getDoubleValueFromEditText(R.id.totalKm),
+                                getDoubleValueFromEditText(R.id.mediaKmL),
+                                getDoubleValueFromEditText(R.id.custoMedioLitro),
+                                getDoubleValueFromEditText(R.id.qtdVeiculos)
+                        );
 
-                        Gasolina g = new Gasolina();
-                        g.setTotalEstimadoKM(700);
-                        g.setCustoMedioLitro(5.89);
-                        g.setMediaKMLitro(15.9);
-                        g.setTotalVeiculos(1);
+                        ViagemCustoHospedagem custoHospedagem = new ViagemCustoHospedagem(
+                                getDoubleValueFromEditText(R.id.custo_noite),
+                                getIntValueFromEditText(R.id.noites),
+                                getIntValueFromEditText(R.id.quartos)
+                        );
 
-                        v.setGasolina(g);
+                        ViagemCustoRefeicao custoRefeicao = new ViagemCustoRefeicao(
+                                getDoubleValueFromEditText(R.id.custo_refeicao),
+                                getIntValueFromEditText(R.id.refeicoes_dia)
+                        );
 
-                        // SELECT BUSCANDO OS ENTRETENIMENTOS.
+                        PostDTO dtoEnviar = new PostDTO(
+                                qtdPessoas,
+                                duracaoViagem,
+                                totalViagem,
+                                ((Spinner) findViewById(R.id.spLocalChegada)).getSelectedItem().toString()
+                        );
 
-                        Entretenimento e = new Entretenimento();
-                        e.setEntretenimento("Parque");
-                        e.setValor(100.00);
+                        dtoEnviar.setViagemCustoAereo(custoAereo);
+                        dtoEnviar.setViagemCustoGasolina(custoGasolina);
+                        dtoEnviar.setViagemCustoHospedagem(custoHospedagem);
+                        dtoEnviar.setViagemCustoRefeicao(custoRefeicao);
 
-                        Entretenimento e1 = new Entretenimento();
-                        e1.setEntretenimento("Festa");
-                        e1.setValor(350.00);
-
-                        ArrayList<Entretenimento> listaEntretenimento = new ArrayList<Entretenimento>();
-                        listaEntretenimento.add(e);
-                        listaEntretenimento.add(e1);
-
-                        v.setListaEntretenimento(listaEntretenimento);
-
-                        //
-                        // Sincronizo com o servidor do professo.
-                        //
-                        API.postViagem(v, new Callback<Resposta>() {
+                        Api.postViagem(dtoEnviar, new Callback<Resposta>() {
                             @Override
                             public void onResponse(Call<Resposta> call, Response<Resposta> response) {
                                 if (response != null && response.isSuccessful()) {
@@ -190,14 +193,16 @@ public class TravelFormActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<Resposta> call, Throwable t) {
-                                // Tratar o erro.
+                                Toast.makeText(TravelFormActivity.this, "Ocorreu um erro ao enviar.", Toast.LENGTH_SHORT).show();
+
+                                t.printStackTrace();
                             }
                         });
 
                         Toast.makeText(TravelFormActivity.this, "Viagem registrada com sucesso.", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(TravelFormActivity.this, MainActivity.class);
-                        //startActivity(intent);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(TravelFormActivity.this, "Erro ao registrar viagem.", Toast.LENGTH_SHORT).show();
                     }
@@ -323,10 +328,6 @@ public class TravelFormActivity extends AppCompatActivity {
         travel.setDescription(etDescription.getText().toString());
 
         DatabaseHelper dbHelper = new DatabaseHelper(TravelFormActivity.this);
-
-        // SELECT NO BANCO DE DADOS BUSCANDO AS INFORMACOES DA VIAGEM.
-
-
 
         return dbHelper.insertTravel(travel);
     }
@@ -474,6 +475,24 @@ public class TravelFormActivity extends AppCompatActivity {
         }
 
         return totalCost;
+    }
+
+    private double calculateTotalViagem() {
+        double totalGasolina = getDoubleValueFromTextView(totalGasolinaTextView);
+        double totalPassagemAerea = getDoubleValueFromTextView(totalPassagemAereaTextView);
+        double totalHospedagem = getDoubleValueFromTextView(totalHospedagemTextView);
+        double totalRefeicoes = getDoubleValueFromTextView(totalRefeicoesTextView);
+
+        return totalGasolina + totalPassagemAerea + totalHospedagem + totalRefeicoes;
+    }
+
+    // Helper method to get double value from TextView
+    private double getDoubleValueFromTextView(TextView textView) {
+        String text = textView.getText().toString().replaceAll("[^\\d.]", ""); // Remove non-numeric characters
+        if (!text.isEmpty()) {
+            return Double.parseDouble(text);
+        }
+        return 0.0;
     }
 
     private int[] getCheckBoxValues(CheckBox[] checkBoxes) {

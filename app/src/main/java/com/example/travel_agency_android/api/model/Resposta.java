@@ -1,4 +1,4 @@
-package models;
+package com.example.travel_agency_android.api.model;
 
 import java.io.Serializable;
 
