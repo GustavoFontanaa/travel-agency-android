@@ -7,28 +7,28 @@ import java.util.ArrayList;
 
 public class Viagem implements Serializable {
 
-    @SerializedName("total_viajantes")
+
     private int totalViajantes;
 
-    @SerializedName("duracao_viagem")
+
     private int duracaoViagem;
 
-    @SerializedName("custo_total_viagem")
+
     private double custoTotalViagem;
 
-    @SerializedName("custo_por_pessoa")
+
     private double custoPorPessoa;
 
-    @SerializedName("local")
+
     private String local;
 
-    @SerializedName("id_conta")
+
     private int idConta;
 
-    @SerializedName("gasolina")
+
     private Gasolina gasolina;
 
-    @SerializedName("lista_entretenimento")
+
     private ArrayList<Entretenimento> listaEntretenimento;
 
     public Viagem() {
