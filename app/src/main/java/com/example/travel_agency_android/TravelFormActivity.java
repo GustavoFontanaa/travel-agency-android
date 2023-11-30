@@ -138,13 +138,15 @@ public class TravelFormActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (areAllFieldsFilled()) {
                     if (insertData()) {
+                        // SELECT NO BANCO DE DADOS BUSCANDO AS INFORMACOES DA VIAGEM.
+
                         Viagem v = new Viagem();
                         v.setIdConta(123482);
                         v.setCustoPorPessoa(500.00);
                         v.setCustoTotalViagem(1000.00);
-                       // v.setDuracaoViagem(travelDuration);
-                        //v.setLocal(selectedLocalChegada);
-                       // v.setTotalViajantes(quantidadePessoas);
+                        v.setDuracaoViagem(7);
+                        v.setLocal("RJ");
+                        v.setTotalViajantes(2);
 
                         // SELECT BUSCANDO OS GASTOS COM A GASOLINA.
 
@@ -195,7 +197,7 @@ public class TravelFormActivity extends AppCompatActivity {
                         Toast.makeText(TravelFormActivity.this, "Viagem registrada com sucesso.", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(TravelFormActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        //startActivity(intent);
                     } else {
                         Toast.makeText(TravelFormActivity.this, "Erro ao registrar viagem.", Toast.LENGTH_SHORT).show();
                     }
